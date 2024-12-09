@@ -127,6 +127,7 @@ func (s *Service) createInstanceImpl(eventObject runtime.Object, instanceSpec *I
 		}
 		compute = computeWithMultiattach
 	}
+	fmt.Printf("DEBUG >>>> serverCreateOpts: %+v\n", serverCreateOpts)
 	server, err := compute.CreateServer(
 		keypairs.CreateOptsExt{
 			CreateOptsBuilder: serverCreateOpts,
@@ -137,11 +138,13 @@ func (s *Service) createInstanceImpl(eventObject runtime.Object, instanceSpec *I
 			AdditionalProperties: schedulerAdditionalProperties,
 		},
 	)
+	fmt.Printf("DEBUG >>>> after CreateServer. server: %+v, err: %+v", server, err)
 	if err != nil {
 		record.Warnf(eventObject, "FailedCreateServer", "Failed to create server %s: %v", instanceSpec.Name, err)
 		return nil, fmt.Errorf("error creating Openstack instance: %v", err)
 	}
 
+	fmt.Printf("DEBUG >>>> %+v\n", server)
 	record.Eventf(eventObject, "SuccessfulCreateServer", "Created server %s with id %s", server.Name, server.ID)
 	return &InstanceStatus{server, s.scope.Logger()}, nil
 }

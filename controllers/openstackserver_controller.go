@@ -343,6 +343,7 @@ func (r *OpenStackServerReconciler) reconcileNormal(ctx context.Context, scope *
 	portIDs := GetPortIDs(openStackServer.Status.Resources.Ports)
 
 	instanceStatus, err := r.getOrCreateServer(ctx, scope.Logger(), openStackServer, computeService, portIDs)
+	fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus: %+v; err: %+v\n", instanceStatus, err)
 	if err != nil || instanceStatus == nil {
 		// Conditions set in getOrCreateInstance
 		return ctrl.Result{}, err
