@@ -343,7 +343,16 @@ func (r *OpenStackServerReconciler) reconcileNormal(ctx context.Context, scope *
 	portIDs := GetPortIDs(openStackServer.Status.Resources.Ports)
 
 	instanceStatus, err := r.getOrCreateServer(ctx, scope.Logger(), openStackServer, computeService, portIDs)
-	fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus: %+v; err: %+v\n", instanceStatus, err)
+	if instanceStatus != nil {
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.AvailabilityZone(): %+v\n", instanceStatus.AvailabilityZone())
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.ID(): %+v", instanceStatus.ID())
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.InstanceIdentifier(): %+v\n", instanceStatus.InstanceIdentifier())
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.Name(): %+v\n", instanceStatus.Name())
+		// fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.NetworkStatus(): %+v\n", instanceStatus.NetworkStatus())
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.SSHKeyName(): %v\n", instanceStatus.SSHKeyName())
+		// fmt.Printf("DEBUG >>>> after getOrCreateServer. instanceStatus.UpdateBastionStatus(): %+v", instanceStatus.UpdateBastionStatus())
+		fmt.Printf("DEBUG >>>> after getOrCreateServer. err: %v\n", err)
+	}
 	if err != nil || instanceStatus == nil {
 		// Conditions set in getOrCreateInstance
 		return ctrl.Result{}, err
